@@ -4,7 +4,8 @@ import com.vaadin.annotations.JavaScript;
 import com.vaadin.server.AbstractJavaScriptExtension;
 import com.vaadin.ui.AbstractComponent;
 
-@JavaScript({ "app://vwebjars/jquery/jquery.js", "jquery.sticky.js", "sticky.js" })
+// The URL with the app:// prefix references to the jquery.js from the jar
+@JavaScript({ "app://webjars/jquery/jquery.js", "jquery.sticky.js", "sticky.js" })
 public class Sticky extends AbstractJavaScriptExtension  {
 
 	private static final long serialVersionUID = -2192286911089320484L;

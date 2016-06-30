@@ -11,17 +11,32 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.webjars.WebJarAssetLocator;
+
 import com.google.gwt.thirdparty.guava.common.io.ByteStreams;
 
-@WebServlet(urlPatterns = "/vwebjars/*")
+@WebServlet(urlPatterns = "/webjars/*")
 public class VWebJarServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1022828878665573318L;
 
+	private WebJarAssetLocator webJarAssetLocator = new WebJarAssetLocator();
+
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		URL resourceURL = getServletContext().getResource(request.getRequestURI());
+		// remove the "/webjars/" prefix
+		String webjarsFileName = request.getRequestURI().substring(9);
+		String url;
+		if (webjarsFileName.contains("/")) {
+			String webjar = webjarsFileName.substring(0, webjarsFileName.indexOf("/"));
+			url = webJarAssetLocator.getFullPath(webjar, webjarsFileName.substring(webjarsFileName.indexOf("/")));
+		} else {
+			url = webJarAssetLocator.getFullPath(webjarsFileName);
+		}
+		// remove the "META-INF/resources" prefix
+		URL resourceURL = getServletContext().getResource(url.substring(18));
+
 		response.setContentType("application/javascript");
 		InputStream resourceStream = resourceURL.openStream();
 		OutputStream output = response.getOutputStream();
